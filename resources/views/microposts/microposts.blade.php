@@ -11,13 +11,26 @@
             </div>
             <div>
                 <p>{!! nl2br(e($micropost->content)) !!}</p>
+                @include('user_favor.favor_button')
             </div>
             <div>
                 @if (Auth::user()->id == $micropost->user_id)
                     {!! Form::open(['route' => ['microposts.destroy', $micropost->id], 'method' => 'delete']) !!}
                         {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
                     {!! Form::close() !!}
+                
+
                 @endif
+               
+                
+                
+                 {{-- <!-- @else -->
+                 <!--   {!! Form::open(['route' => ['microposts.destroy', $micropost->id], 'method' => 'delete']) !!} -->
+                 <!--       {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!} -->
+                 <!--   {!! Form::close() !!} -->
+                 <!-- @include('user_favor.favor_button', ['user' => $user]) --> --}}
+                
+              
             </div>
         </div>
     </li>

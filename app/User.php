@@ -70,8 +70,8 @@ class User extends Authenticatable
     }
 }
 
-public function unfollow($userId)
-{
+    public function unfollow($userId)
+    {
     // 既にフォローしているかの確認
     $exist = $this->is_following($userId);
     // 自分自身ではないかの確認
@@ -87,8 +87,74 @@ public function unfollow($userId)
     }
 }
 
-public function is_following($userId) {
+    public function is_following($userId) {
     return $this->followings()->where('follow_id', $userId)->exists();
+    }
+
+    public function feed_microposts()
+    {
+        $follow_user_ids = $this->followings()-> pluck('users.id')->toArray();
+        $follow_user_ids[] = $this->id;
+        return Micropost::whereIn('user_id', $follow_user_ids);
+    }
+ 
+
+    public function favorings()
+    {
+        return $this->belongsToMany(Micropost::class, 'user_favor', 'user_id', 'favor_id')->withTimestamps();
+    }
+ 
+ 
+ 
+ 
+    public function favor($id)
+    {
+    // 既にフォローしているかの確認
+    $exist = $this->is_favoring($id);
+    
+    
+    
+    if($exist) {
+        // 既にフォローしていれば何もしない
+        return false;
+    }else{
+        // 未フォローであればフォローする
+        $this->favorings()->attach($id);
+        return true;
+    }
 }
+
+public function unfavor($postId)
+{
+    // 既にフォローしているかの確認
+    $exist = $this->is_favoring($postId);
+    // 自分自身ではないかの確認
+    $its_me = $this->id == $postId;
+
+    if ($exist && !$its_me) {
+        // 既にフォローしていればフォローを外す
+        $this->favorings()->detach($postId);
+        return true;
+    } else {
+        // 未フォローであれば何もしない
+        return false;
+    }
+}
+
+public function is_favoring($id) {
+    return $this->favorings()->where('favor_id', $id)->exists();
+} 
+ 
+ 
+  public function feed_microposts_favo()
+    {
+        $favor_post_ids = $this->favorings()-> pluck('posts.id')->toArray();
+        $favor_post_ids[] = $this->id;
+        return Micropost::whereIn('post_id', $favor_post_ids);
+    }
+ 
+ 
+ 
+ 
     
 }

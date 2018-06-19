@@ -30,6 +30,7 @@ class MicropostsController extends Controller
             return view('welcome');
         }
     }
+
     
     public function store(Request $request)
     {
@@ -54,6 +55,19 @@ class MicropostsController extends Controller
 
         return redirect()->back();
     }
+    
+    public function favorite ($id)
+    {
+        $micropost = \App\Micropost::all();
+
+        if (\Auth::user()->id === $micropost->user_id) {
+            $micropost->favoring();
+        }
+
+        return redirect()->back();
+    }
+    
+    
     
     
 }

@@ -11,8 +11,7 @@
                     <img class="media-object img-rounded img-responsive" src="{{ Gravatar::src($user->email, 500) }}" alt="">
                 </div>
             </div>
-            @include('user_follow.follow_button', ['user' => $user])
-           
+
         </aside>
         <div class="col-xs-8">
             <ul class="nav nav-tabs nav-justified">
@@ -21,19 +20,7 @@
                 <li role="presentation" class="{{ Request::is('users/*/followers') ? 'active' : '' }}"><a href="{{ route('users.followers', ['id' => $user->id]) }}">Followers <span class="badge">{{ $count_followers }}</span></a></li>
                 <li role="presentation" class="{{ Request::is('users/*/favorings') ? 'active' : '' }}"><a href="{{ route('users.favorings', ['id' => $user->id]) }}">Favorings <span class="badge">{{ $count_favorings }}</span></a></li>
             </ul>
-            
-          
-            
-            @if (Auth::id() == $user->id)
-                  {!! Form::open(['route' => 'microposts.store']) !!}
-                      <div class="form-group">
-                          {!! Form::textarea('content', old('content'), ['class' => 'form-control', 'rows' => '2']) !!}
-                          {!! Form::submit('Post', ['class' => 'btn btn-primary btn-block']) !!}
-                      </div>
-                  {!! Form::close() !!}
-            @endif
-            
-             @if (count($microposts) > 0)
+            @if (count($microposts) > 0)
                 @include('microposts.microposts', ['microposts' => $microposts])
             @endif
         </div>
